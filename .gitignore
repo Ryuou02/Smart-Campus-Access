@@ -1,0 +1,11 @@
+# Flutter specific
+**/build/
+**/.dart_tool/
+**/.packages
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/*.log
+pubspec.lock
+*.env  # To ignore environment files
+
