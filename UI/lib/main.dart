@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_basics/pages/login.dart' show LoginPage;
+import 'package:smart_campus_access/pages/login.dart' show LoginPage;
 
 void main() {
   runApp(MyApp());
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Flutter App',
+      title: 'Smart Campus Access',
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );

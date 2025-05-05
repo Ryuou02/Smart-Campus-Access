@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_basics/pages/home.dart' show HomePage;
+import 'package:smart_campus_access/pages/home.dart' show HomePage;
 class LoginPage extends StatelessWidget {
   final TextEditingController applicationNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
