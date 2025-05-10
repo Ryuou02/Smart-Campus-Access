@@ -1,4 +1,4 @@
-import 'dart:convert'; // Added for base64 decoding
+import 'dart:convert'; // Added for base64 decoding 
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
