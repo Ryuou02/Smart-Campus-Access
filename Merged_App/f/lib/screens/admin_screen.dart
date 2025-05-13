@@ -1332,13 +1332,6 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 }
 
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:smart_campus_access/models/user.dart';
 // import 'package:smart_campus_access/screens/login_screen.dart';
