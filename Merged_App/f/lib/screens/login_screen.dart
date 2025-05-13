@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 7bd0ff625ba139d54301445e74ec8595a54afecf
 import 'package:flutter/material.dart';
 import 'package:smart_campus_access/screens/admin_screen.dart';
 import 'package:smart_campus_access/screens/faculty_screen.dart';

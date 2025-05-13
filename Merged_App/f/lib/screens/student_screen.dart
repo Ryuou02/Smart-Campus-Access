@@ -652,11 +652,7 @@ class _StudentScreenState extends State<StudentScreen> {
           SnackBar(content: Text("No app available to open $url")),
         );
       }
-<<<<<<< HEAD
     } catch (e) { 
-=======
-    } catch (e) {
->>>>>>> 7bd0ff625ba139d54301445e74ec8595a54afecf
       print("Error launching URL $url: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to open $url: $e")),
