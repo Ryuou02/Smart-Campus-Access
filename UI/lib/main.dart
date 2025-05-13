@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smart_campus_access/pages/login.dart' show LoginPage;
+import 'package:smart_campus_access/services/mongodb_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MongoDBService.connect();
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override

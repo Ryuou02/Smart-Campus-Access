@@ -1,28 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:smart_campus_access/services/mongodb_service.dart' as mongo;
 import 'package:smart_campus_access/pages/schedule.dart' show SchedulePage;
 
+
+
 class Courses extends StatefulWidget {
+  final Map<String, dynamic> user;
+  const Courses({Key? key, required this.user}) : super(key: key);
   @override
   _CourseState createState() => _CourseState();
 }
 
 
 class _CourseState extends State<Courses> {
-  List<Map<String, String>> courses = [
-    {
-      "title": "course 1",
-      "description": "19cse203"
-    },
-    {
-      "title": "course2",
-      "description": "10cse308"
-    },
-    {
-      "title": "course 3",
-      "description": "100cse314"
-    }
-  ];
+  bool _isFetchingCourses = false;
+  Set<String> _loadingLinks = {};
+  List<Map<String, dynamic>> courses = [];
+  late String _rollNumber;
 
+  @override
+  void initState() {
+    super.initState();
+    _rollNumber = widget.user['rollNumber'] ?? 'N/A';
+    _fetchCourses();
+  }
+  Future<void> _fetchCourses() async {
+    try {
+      setState(() {
+        _isFetchingCourses = true;
+      });
+      final _courses = await mongo.MongoDBService.getCoursesForStudent(_rollNumber);
+      setState(() {
+        courses = _courses;
+      });
+    } catch (e) {
+      print("Error fetching courses for student $_rollNumber: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error fetching courses: $e")),
+      );
+    } finally {
+      setState(() {
+        _isFetchingCourses = false;
+      });
+    }
+  }
+
+  Future<void> _launchURL(String url) async {
+    // Validate the URL format
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://$url';
+    }
+
+    final Uri uri = Uri.tryParse(url) ?? Uri();
+    if (uri.scheme.isEmpty || uri.host.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Invalid URL: $url")),
+      );
+      return;
+    }
+
+    // Add the URL to the loading set
+    setState(() {
+      _loadingLinks.add(url);
+    });
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("No app available to open $url")),
+        );
+      }
+    } catch (e) {
+      print("Error launching URL $url: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to open $url: $e")),
+      );
+    } finally {
+      // Remove the URL from the loading set
+      setState(() {
+        _loadingLinks.remove(url);
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -33,6 +95,7 @@ class _CourseState extends State<Courses> {
         title: Text("Courses"),
         centerTitle: true,
       ),
+      
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -49,9 +112,10 @@ class _CourseState extends State<Courses> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(course["title"]!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                        
+                        Text(course["courseName"]!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                         SizedBox(height: 4),
-                        Text(course["description"]!),
+                        Text(course["courseCode"]!),
                         SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerRight,
@@ -60,7 +124,7 @@ class _CourseState extends State<Courses> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  // do nothing
+                                  _launchURL(course['resources']['syllabusLink']);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xCCB24507),
@@ -73,10 +137,7 @@ class _CourseState extends State<Courses> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => SchedulePage()),
-                                  );
+                                    _launchURL(course['resources']['scheduleLink']);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xCCB24507),
@@ -89,7 +150,7 @@ class _CourseState extends State<Courses> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                    // do nothing
+                                    _launchURL(course['resources']['materialsLink']);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xCCB24507),
