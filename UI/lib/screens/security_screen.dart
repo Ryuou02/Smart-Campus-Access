@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:smart_campus_access/pages/login.dart';
 import 'package:smart_campus_access/screens/login_screen.dart';
 import 'package:smart_campus_access/services/mongodb_service.dart' as mongo;
 
@@ -86,7 +87,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
           ),

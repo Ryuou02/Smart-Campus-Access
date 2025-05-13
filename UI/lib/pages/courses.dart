@@ -92,7 +92,7 @@ class _CourseState extends State<Courses> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[700],
-        title: Text("Courses"),
+        title: Text("Courses",style:TextStyle(color:Colors.white)),
         centerTitle: true,
       ),
       
@@ -101,7 +101,7 @@ class _CourseState extends State<Courses> {
         child: Column(
           children: [
             
-            
+            courses.isEmpty ? buildNoCoursesCard():SizedBox(height: 0),
             SizedBox(height: 12),
             Column(
               children: courses.map((course) {
@@ -177,5 +177,33 @@ class _CourseState extends State<Courses> {
       ),
     );
   }
+  Widget buildNoCoursesCard() {
+  return Card(
+    margin: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+    elevation: 4,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Padding(
+      padding: EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Icon(Icons.info_outline, color: Colors.blue, size: 28),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "You currently have no assigned courses.",
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 
 }

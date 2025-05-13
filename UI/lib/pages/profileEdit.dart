@@ -79,19 +79,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: widget.user['photoData'] != null
-                          ? Image.memory(
-                              base64Decode(widget.user['photoData']!),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.person,
-                                  size: 80,
-                                  color: Colors.grey,
-                                );
-                              },
-                            )
+                          ? _buildSafeImage(widget.user['photoData']!)
                           : const Icon(
                               Icons.person,
                               size: 80,
@@ -170,5 +158,30 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         ),
       ),
     );
+  }
+  Widget _buildSafeImage(String base64String) {
+    try {
+      final imageBytes = base64Decode(base64String);
+      return Image.memory(
+        imageBytes,
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.person,
+            size: 80,
+            color: Colors.grey,
+          );
+        },
+      );
+    } catch (e) {
+      print("Base64 decode error: $e");
+      return const Icon(
+        Icons.person,
+        size: 80,
+        color: Colors.grey,
+      );
+    }
   }
 }

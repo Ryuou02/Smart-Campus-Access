@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:convert';
 import 'package:smart_campus_access/pages/courses.dart' show Courses;
+import 'package:smart_campus_access/pages/login.dart';
 import 'package:smart_campus_access/pages/profileEdit.dart' show ProfileEditPage;
 import 'package:smart_campus_access/pages/schedule.dart' show SchedulePage;
 import 'package:smart_campus_access/services/mongodb_service.dart' as mongo;
@@ -60,8 +61,19 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[700],
-        title: Text("Home"),
+        title: Text("Home",style:TextStyle(color:Colors.white)),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+          ),
+        ]
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -70,27 +82,15 @@ class _HomePageState extends State<HomePage> {
             // Profile Picture
             Center(
               child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: _photoData != null
-                          ? Image.memory(
-                              base64Decode(_photoData!),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.person,
-                                  size: 80,
-                                  color: Colors.grey,
-                                );
-                              },
-                            )
-                          : const Icon(
-                              Icons.person,
-                              size: 80,
-                              color: Colors.grey,
-                            ),
-                    )
+                borderRadius: BorderRadius.circular(10),
+                child: _photoData != null
+                    ? _buildSafeImage(_photoData!)
+                    : const Icon(
+                        Icons.person,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+              ),
             ),
             SizedBox(height: 24),
 
@@ -119,8 +119,6 @@ class _HomePageState extends State<HomePage> {
                           Text(notification["title"]!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                           SizedBox(height: 4),
                           Text(notification["questions"][0]!),
-                          SizedBox(height: 8),
-                          Text(notification["questions"][1]!),
                           SizedBox(height: 8),
                           Align(
                             alignment: Alignment.centerRight,
@@ -221,4 +219,30 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  Widget _buildSafeImage(String base64String) {
+    try {
+      final imageBytes = base64Decode(base64String);
+      return Image.memory(
+        imageBytes,
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.person,
+            size: 80,
+            color: Colors.grey,
+          );
+        },
+      );
+    } catch (e) {
+      print("Base64 decode error: $e");
+      return const Icon(
+        Icons.person,
+        size: 80,
+        color: Colors.grey,
+      );
+    }
+  }
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_campus_access/models/user.dart';
+import 'package:smart_campus_access/pages/login.dart';
 import 'package:smart_campus_access/screens/login_screen.dart';
 import 'package:smart_campus_access/screens/recognition_screen.dart';
 import 'package:smart_campus_access/screens/registration_screen.dart';
@@ -189,7 +190,7 @@ class _AdminScreenState extends State<AdminScreen> {
       await _fetchFeedbackForms();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Feedback form created successfully")),
+        const SnackBar(content: Text("Notification created successfully")),
       );
 
       setState(() {
@@ -403,7 +404,7 @@ class _AdminScreenState extends State<AdminScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
           ),
@@ -675,7 +676,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                           _isCreatingForm = true;
                                         });
                                       },
-                                      label: "Create Feedback Form",
+                                      label: "Create Notification",
                                     ),
                                     const SizedBox(height: 15),
                                     _buildElevatedButton(
@@ -696,15 +697,7 @@ class _AdminScreenState extends State<AdminScreen> {
                                       },
                                       label: "View Students",
                                     ),
-                                    const SizedBox(height: 15),
-                                    _buildElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _isViewingFeedback = true;
-                                        });
-                                      },
-                                      label: "View Feedback Responses",
-                                    ),
+                                    
                                     const SizedBox(height: 15),
                                     _buildElevatedButton(
                                       onPressed: () {
@@ -768,7 +761,7 @@ class _AdminScreenState extends State<AdminScreen> {
         child: Column(
           children: [
             _buildTextField(
-              label: 'Feedback Form Title',
+              label: 'Notification Title',
               icon: Icons.title,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -780,27 +773,15 @@ class _AdminScreenState extends State<AdminScreen> {
             ),
             const SizedBox(height: 15),
             _buildTextField(
-              label: 'Question 1',
+              label: 'notification description',
               icon: Icons.question_answer,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter the first question';
+                  return 'Please enter 1 line about notification';
                 }
                 return null;
               },
               onSaved: (value) => _question1 = value!,
-            ),
-            const SizedBox(height: 15),
-            _buildTextField(
-              label: 'Question 2',
-              icon: Icons.question_answer,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the second question';
-                }
-                return null;
-              },
-              onSaved: (value) => _question2 = value!,
             ),
             const SizedBox(height: 20),
             Row(
@@ -817,7 +798,7 @@ class _AdminScreenState extends State<AdminScreen> {
                 ),
                 _buildElevatedButton(
                   onPressed: _createFeedbackForm,
-                  label: "Create Form",
+                  label: "Create Notification",
                 ),
               ],
             ),

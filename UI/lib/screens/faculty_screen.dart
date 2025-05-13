@@ -1056,6 +1056,7 @@
 import 'dart:convert'; // Add this import for base64 decoding
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+import 'package:smart_campus_access/pages/login.dart';
 import 'package:smart_campus_access/screens/login_screen.dart';
 import 'package:smart_campus_access/services/mongodb_service.dart' as mongo;
 
@@ -1136,7 +1137,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
       setState(() => _isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Feedback form created successfully")),
+        const SnackBar(content: Text("Notification created successfully")),
       );
 
       _formKey.currentState!.reset();
@@ -1265,7 +1266,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
           ),
@@ -1284,7 +1285,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle("Create Feedback Form"),
+              _buildSectionTitle("Create Notification"),
               const SizedBox(height: 20),
               Card(
                 elevation: 8,
@@ -1298,10 +1299,10 @@ class _FacultyScreenState extends State<FacultyScreen> {
                     child: Column(
                       children: [
                         _buildTextField(
-                          label: 'Form Title',
+                          label: 'Notification Title',
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter form title';
+                              return 'Please enter notification title';
                             }
                             return null;
                           },
@@ -1309,115 +1310,27 @@ class _FacultyScreenState extends State<FacultyScreen> {
                         ),
                         const SizedBox(height: 15),
                         _buildTextField(
-                          label: 'Question 1',
+                          label: 'Notification',
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter question 1';
+                              return 'Please enter notification';
                             }
                             return null;
                           },
                           onSaved: (value) => _question1 = value!,
                         ),
                         const SizedBox(height: 15),
-                        _buildTextField(
-                          label: 'Question 2',
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter question 2';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) => _question2 = value!,
-                        ),
-                        const SizedBox(height: 20),
                         _isLoading
                             ? const CircularProgressIndicator()
                             : _buildElevatedButton(
                                 onPressed: _createFeedbackForm,
-                                label: "Create Form",
+                                label: "notify",
                               ),
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              _buildSectionTitle("Your Feedback Forms"),
-              const SizedBox(height: 20),
-              _feedbackForms.isEmpty
-                  ? _buildEmptyMessage("No feedback forms created")
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _feedbackForms.length,
-                      itemBuilder: (context, index) {
-                        final form = _feedbackForms[index];
-                        final formId = form['_id'].toHexString();
-                        final responses = _responses[formId] ?? [];
-                        return Card(
-                          elevation: 5,
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Title: ${form['title']}",
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "Question 1: ${form['questions'][0]}",
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  "Question 2: ${form['questions'][1]}",
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                                const SizedBox(height: 10),
-                                _buildElevatedButton(
-                                  onPressed: () => _viewResponses(formId),
-                                  label: "View Responses",
-                                ),
-                                if (responses.isNotEmpty) ...[
-                                  const SizedBox(height: 10),
-                                  const Text(
-                                    "Responses:",
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                  ),
-                                  ...responses.map((response) => Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 5),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Student Roll: ${response['studentRollNumber']}",
-                                              style: const TextStyle(fontSize: 14),
-                                            ),
-                                            Text(
-                                              "Rating: ${response['rating']}",
-                                              style: const TextStyle(fontSize: 14),
-                                            ),
-                                            Text(
-                                              "Comments: ${response['comments']}",
-                                              style: const TextStyle(fontSize: 14),
-                                            ),
-                                            const Divider(),
-                                          ],
-                                        ),
-                                      )),
-                                ],
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
               const SizedBox(height: 30),
               _buildSectionTitle("Take Attendance"),
               const SizedBox(height: 20),
