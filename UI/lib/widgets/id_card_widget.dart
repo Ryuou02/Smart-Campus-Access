@@ -71,19 +71,7 @@ class IdCardWidget extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: photoData != null
-                          ? Image.memory(
-                              base64Decode(photoData!),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(
-                                  Icons.person,
-                                  size: 80,
-                                  color: Colors.grey,
-                                );
-                              },
-                            )
+                          ? _buildSafeImage(photoData!)
                           : const Icon(
                               Icons.person,
                               size: 80,
@@ -102,10 +90,6 @@ class IdCardWidget extends StatelessWidget {
                           _buildInfoText("PHONE: $phoneNumber"),
                           const SizedBox(height: 5),
                           _buildInfoText("YEAR: $year"),
-                          const SizedBox(height: 5),
-                          _buildInfoText("Degree: $degree"),
-                          const SizedBox(height: 5),
-                          _buildInfoText("Specialization: $specialization"),
                         ],
                       ),
                     ),
@@ -163,31 +147,37 @@ class IdCardWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (onReset != null) ...[
-                  const SizedBox(height: 10),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: onReset,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        "Back",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
         ),
       ),
     );
+  }
+  Widget _buildSafeImage(String base64String) {
+    try {
+      final imageBytes = base64Decode(base64String);
+      return Image.memory(
+        imageBytes,
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.person,
+            size: 80,
+            color: Colors.grey,
+          );
+        },
+      );
+    } catch (e) {
+      print("Base64 decode error: $e");
+      return const Icon(
+        Icons.person,
+        size: 80,
+        color: Colors.grey,
+      );
+    }
   }
 
   Widget _buildInfoText(String text) {

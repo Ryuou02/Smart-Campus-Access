@@ -6,6 +6,7 @@ import 'package:smart_campus_access/pages/login.dart';
 import 'package:smart_campus_access/pages/profileEdit.dart' show ProfileEditPage;
 import 'package:smart_campus_access/pages/schedule.dart' show SchedulePage;
 import 'package:smart_campus_access/services/mongodb_service.dart' as mongo;
+import 'package:smart_campus_access/widgets/id_card_widget.dart';
 class HomePage extends StatefulWidget {
   final Map<String, dynamic> user;
   const HomePage({Key? key, required this.user}) : super(key: key);
@@ -81,16 +82,22 @@ class _HomePageState extends State<HomePage> {
           children: [
             // Profile Picture
             Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: _photoData != null
-                    ? _buildSafeImage(_photoData!)
-                    : const Icon(
-                        Icons.person,
-                        size: 80,
-                        color: Colors.grey,
-                      ),
-              ),
+              child: IdCardWidget(
+                            name: widget.user['name'] ?? 'N/A',
+                            rollNumber: widget.user['rollNumber'] ?? 'N/A',
+                            phoneNumber: widget.user['phoneNumber'] ?? 'N/A',
+                            year: widget.user['year'],
+                            degree: widget.user['degree'],
+                            specialization: widget.user['specialization'],
+                            photoData: widget.user['photoData'], // Changed to photoData
+                            qrCodeId: _qrCodeId,
+                            onReset: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginPage()),
+                              );
+                            },
+                          )
             ),
             SizedBox(height: 24),
 
