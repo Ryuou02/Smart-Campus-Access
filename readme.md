@@ -90,6 +90,11 @@ Make sure the following tools are installed:
 git clone https://github.com/your-username/smart-campus-access.git
 cd smart-campus-access
 ```
+### 2. Navigate to ./UI
+```bash
+cd smart-campus-access
+```
+### 3. Run main.dart in ./lib
 
 ## License
 
