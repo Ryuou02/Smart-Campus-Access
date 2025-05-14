@@ -1110,6 +1110,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
 
   Future<void> _fetchAttendanceLogs() async {
     final logs = await mongo.MongoDBService.getAttendanceLogsByFaculty(widget.user['rollNumber']);
+    print(logs);
     setState(() {
       _attendanceLogs = logs;
     });
@@ -1223,7 +1224,9 @@ class _FacultyScreenState extends State<FacultyScreen> {
 
     final selectedDateStr = _selectedDate!.toIso8601String().substring(0, 10); // YYYY-MM-DD
     final Map<String, Map<String, dynamic>> consolidatedLogs = {};
-
+    _attendanceLogs = await mongo.MongoDBService.getAttendanceLogsByFaculty(widget.user['rollNumber']);
+    print("attendance logs ------------- ");
+    print(_attendanceLogs);
     for (var log in _attendanceLogs) {
       final logDate = log['timestamp'].substring(0, 10);
       if (logDate == selectedDateStr) {
@@ -1243,6 +1246,8 @@ class _FacultyScreenState extends State<FacultyScreen> {
     setState(() {
       _filteredAttendanceLogs = consolidatedLogs.values.toList();
     });
+    print("attendance logs => ");
+    print(_filteredAttendanceLogs);
   }
 
   Future<String?> _fetchStudentPhoto(String rollNumber) async {
@@ -1411,7 +1416,7 @@ class _FacultyScreenState extends State<FacultyScreen> {
               _selectedDate == null
                   ? _buildEmptyMessage("Please select a date to view logs")
                   : _filteredAttendanceLogs.isEmpty
-                      ? _buildEmptyMessage("No attendance logs for this date")
+                      ? _buildEmptyMessage("No attendance logs for this date")  
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

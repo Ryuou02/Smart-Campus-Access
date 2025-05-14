@@ -2,10 +2,10 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class MongoDBService {
-  // static const String _connectionString =
-  //     "mongodb+srv://m_v_p:Venkat_19@smart-campus.r7orvf4.mongodb.net/smart_campus_db?retryWrites=true&w=majority&appName=smart-campus&connectTimeoutMS=10000&socketTimeoutMS=30000";
   static const String _connectionString =
-      "mongodb+srv://m_v_p:venkat_19@smartcampus.2pwzqo2.mongodb.net/smart_campus_db?retryWrites=true&w=majority&appName=smartcampus";
+      "mongodb+srv://m_v_p:Venkat_19@smart-campus.r7orvf4.mongodb.net/smart_campus_db?retryWrites=true&w=majority&appName=smart-campus&connectTimeoutMS=10000&socketTimeoutMS=30000";
+  // static const String _connectionString =
+  //     "mongodb+srv://m_v_p:venkat_19@smartcampus.2pwzqo2.mongodb.net/smart_campus_db?retryWrites=true&w=majority&appName=smartcampus";
 
   static Db? _db;
   static DbCollection? _usersCollection;
@@ -32,7 +32,7 @@ class MongoDBService {
       _feedbackFormsCollection = _db!.collection('feedback_forms');
       _feedbackResponsesCollection = _db!.collection('feedback_responses');
       _accessLogsCollection = _db!.collection('access_logs');
-      _attendanceLogsCollection = _db!.collection('attendance_logs');
+      _attendanceLogsCollection = _db!.collection('access_logs');
       _coursesCollection = _db!.collection('courses');
       _studentCoursesCollection = _db!.collection('student_courses');
       print("Connected to MongoDB Atlas");
@@ -195,7 +195,9 @@ class MongoDBService {
 
   static Future<List<Map<String, dynamic>>> getAttendanceLogsByFaculty(String facultyRollNumber) async {
     await ensureConnected();
+    print("faculty roll => " + facultyRollNumber);
     final logs = await _attendanceLogsCollection?.find(where.eq('facultyRollNumber', facultyRollNumber)).toList();
+    print(logs);
     return logs?.cast<Map<String, dynamic>>() ?? [];
   }
 
