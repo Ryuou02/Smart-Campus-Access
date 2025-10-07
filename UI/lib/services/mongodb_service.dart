@@ -2,10 +2,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:uuid/uuid.dart';
 
 class MongoDBService {
-  static const String _connectionString =
-      "mongodb+srv://m_v_p:Venkat_19@smart-campus.r7orvf4.mongodb.net/smart_campus_db?retryWrites=true&w=majority&appName=smart-campus&connectTimeoutMS=10000&socketTimeoutMS=30000";
-  // static const String _connectionString =
-  //     "mongodb+srv://m_v_p:venkat_19@smartcampus.2pwzqo2.mongodb.net/smart_campus_db?retryWrites=true&w=majority&appName=smartcampus";
+  static const String _connectionString = // place mongodb connection string
 
   static Db? _db;
   static DbCollection? _usersCollection;
